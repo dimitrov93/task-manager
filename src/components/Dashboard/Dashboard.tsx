@@ -1,6 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux"
 
 const Dashboard = () => {
+
+  
+
   return (
     <div className=" bg-slate-200 w-screen  h-screen">
       <div className="text-2xl text-dark-white font-bold grid  ml-5 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 ">
