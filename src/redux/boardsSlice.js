@@ -5,7 +5,11 @@ const boardsSlice = createSlice({
     name: "boards",
     initialState: data.boards,
     reducers: {
-
+        addTask: {
+            reducer(state, action) {
+                state.push(action.payload)
+            }
+        }
     }
 })
 

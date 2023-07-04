@@ -92,9 +92,9 @@ const Sidebar = () => {
 
         <ul className="pt-2">
           {Menus.map((menu, index) => (
-            <>
+            <div key={index}>
               <li
-                key={index}
+                
                 className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md ${
                   menu.spacing ? "mt-9" : "mt-2"
                 }`}
@@ -129,7 +129,7 @@ const Sidebar = () => {
                   ))}
                 </ul>
               )}
-            </>
+            </div>
           ))}
         </ul>
       </div>
