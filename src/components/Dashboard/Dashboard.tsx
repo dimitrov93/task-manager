@@ -1,24 +1,47 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addTask } from "../../redux/boardsSlice";
+import { v4 as uuidv4 } from "uuid";
 
 interface RootState {
   boards: string[];
 }
 
-const createNewTask = (e) => {};
+
 
 const Dashboard = () => {
+  const dispatch = useDispatch()
+  
   const boards = useSelector((state: RootState) => state.boards);
+  
   const col = boards[0].columns;
+  const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("Todo");
+  const canSave = Boolean(title) && Boolean(description) && Boolean(status)
+  const [newColumns, setNewColumns] = useState([
+    { name: "Todo", tasks: [], id: uuidv4() },
+    { name: "Doing", tasks: [], id: uuidv4() },
+  ]);
 
-  console.log(status);
+
+  const onTitleChanged = e => setTitle(e.target.value)
+  const onDescriptionChanged = e => setDescription(e.target.value)
+  const onStatusChanges = e => setStatus(e.target.value)
+
+  const createNewTask = (e) => {
+    
+    if (title && description) {
+      dispatch(
+        addTask({title,description,status})
+      )
+    }
+  };
 
   return (
     <>
-      <div className=" bg-slate-200 w-fit h-screen">
+      <div className=" bg-slate-200 w-fit overflow-y-auto h-screen  ">
         <div className="text-2xl text-dark-white font-bold grid gap-2  ml-5 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 ">
           {col.map((item, index) => (
             <div key={index} className="flex flex-col gap-4">
@@ -52,38 +75,45 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="w-1/4 flex flex-col justify-center items-center">
-        <div>
-          <input
-            type="text"
-            placeholder="Title..."
-            className=" border"
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            placeholder="Description..."
-            className=" border"
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="Status">Status:</label>
-          <select
-            name="Status"
-            id="Status"
-            onChange={(e) => setStatus(e.target.value)}
+      <div className="w-1/4 flex justify-center items-center ">
+        <form className="border-2 p-2 m-4 flex flex-col">
+          <div>
+            <input
+              type="text"
+              placeholder="Title..."
+              className=" border"
+              onChange={onTitleChanged}
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Description..."
+              className=" border"
+              onChange={onDescriptionChanged}
+            />
+          </div>
+          <div>
+            <label htmlFor="Status">Status:</label>
+            <select
+              name="Status"
+              id="Status"
+              onChange={onStatusChanges}
+            >
+              <option value="Todo">To do</option>
+              <option value="Doing">Doing</option>
+              <option value="Done">Done</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            className="rounded-full p-2 bg-slate-400 text-xl cursor-pointer "
+            onClick={createNewTask}
+            disabled={!canSave}
           >
-            <option value="Todo">To do</option>
-            <option value="Doing">Doing</option>
-            <option value="Done">Done</option>
-          </select>
-        </div>
-        <h1 className=" text-xl hover: cursor-pointer" onClick={createNewTask}>
-          Create new task
-        </h1>
+            Create new task
+          </button>
+        </form>
       </div>
     </>
   );
